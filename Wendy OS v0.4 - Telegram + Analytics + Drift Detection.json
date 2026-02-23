@@ -1,0 +1,81 @@
+{
+  "name": "Wendy OS v0.4 - Telegram + Analytics + Drift Detection",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": ["message", "callback_query"]
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://YOUR_BACKEND_IP:8000/message",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"source\": \"telegram\", \"telegram_user_id\": \"{{ $json.telegram_user_id }}\", \"message\": \"{{ $json.text }}\" }"
+      },
+      "id": "send-message",
+      "name": "Send to Wendy /message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "url": "http://YOUR_BACKEND_IP:8000/analytics/drift-status",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-WENDY-CRON-TOKEN",
+              "value": "={{ $env.WENDY_CRON_TOKEN }}"
+            }
+          ]
+        }
+      },
+      "id": "fetch-drift",
+      "name": "Fetch Drift Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://YOUR_BACKEND_IP:8000/generate-weekly-summary",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-WENDY-CRON-TOKEN",
+              "value": "={{ $env.WENDY_CRON_TOKEN }}"
+            }
+          ]
+        }
+      },
+      "id": "weekly-summary",
+      "name": "Trigger Weekly Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wendy-events",
+        "responseMode": "responseNode"
+      },
+      "id": "wendy-webhook",
+      "name": "Wendy Event Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}

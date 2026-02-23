@@ -368,6 +368,84 @@ Wendy OS is an exploration in applied system design — combining AI, backend ar
 
 # Wendy OS is an exploration in applied system design — combining AI, backend architecture, automation orchestration, and behavioral analytics into a cohesive operating layer.
 
+## Local Setup & Execution
 
+### 1. Clone the Repository
 
->>>>>>> 0f2d3eb (Minor README update)
+```bash
+git clone https://github.com/tusharnyyr/wendy-os.git
+cd wendy-os
+```
+
+---
+
+### 2. Create Virtual Environment
+
+```bash
+python -m venv venv
+venv\Scripts\activate     # Windows
+# source venv/bin/activate  # macOS/Linux
+```
+
+---
+
+### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### 4. Configure Environment Variables
+
+Copy the example file:
+
+```bash
+copy .env.example .env     # Windows
+# cp .env.example .env     # macOS/Linux
+```
+
+Update the following values inside `.env`:
+
+- DATABASE_URL  
+- GROQ_API_KEY  
+- TELEGRAM_BOT_TOKEN  
+- N8N_WEBHOOK_URL  
+- WENDY_CRON_TOKEN  
+
+---
+
+### 5. Initialize Database
+
+```bash
+python init_database.py
+```
+
+Ensure PostgreSQL is running before executing this step.
+
+---
+
+### 6. Run Backend Server
+
+```bash
+uvicorn main:app --reload
+```
+
+Backend will start at:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+### 7. Import n8n Workflow
+
+1. Open n8n.
+2. Import `wendy_os_v04_n8n_workflow.json`.
+3. Configure Telegram credentials.
+4. Set environment variable `WENDY_CRON_TOKEN` in n8n.
+5. Activate the workflow.
+
+System is now operational.

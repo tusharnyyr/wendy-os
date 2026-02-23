@@ -8,8 +8,13 @@ This is not a chatbot.
 It is a structured intelligence engine built with separation of concerns, deterministic routing, and event-driven architecture.
 
 ---
+## Architecture Overview
 
+![Wendy Architecture](docs/architecture.png)
+
+---
 ## 🧠 Core Architecture
+
 
 Telegram → n8n → FastAPI Backend → PostgreSQL → Event Bus → n8n → Telegram
 
